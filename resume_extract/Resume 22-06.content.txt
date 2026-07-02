@@ -1,0 +1,64 @@
+judge-facing demo; demonstrated ownership and delivery under pressure.                                    Sept 2025
+• Industry Academia Conclave — 24-Hour Hackathon, Winner: Led end-to-end solution design, rapid prototyping, and
+demonstrating communication and stakeholder management.                                               Feb 2025
+• Gravitas — VIT Technical Fest, Coordinator: Food Stall Committee; led vendor onboarding and engagement,
+managed stall logistics and real-time issue resolution.                                                      Feb 2024
+• Riviera — VIT International Cultural Fest, Volunteer: Food Stall Committee; coordinated with 10+ vendors,
+Activities & Leadership
+• Data Science: Teachnook in association with IIT Roorkee — June 2024
+• Python Essentials 1 & 2: Cisco Networking Academy — July 2025
+• AI Agents & Agentic AI: Vanderbilt University via Coursera — July 2025
+Certifications
+MySQL (Apr ’24)
+feeds and chatbot support improving farmer decision-making outcomes. Tech: Java Spring Boot, React.js, Tailwind CSS,
+using Java Spring Boot; applied OOAD and Design Patterns for enterprise-grade maintainability. Integrated real-time data
+• AgriConnect Platform (Java Spring Boot, React.js, Microservices): Built scalable RESTful microservices backend
+Python, Flask, Scikit-learn, TensorFlow, Pandas (Sep ’24)
+selection and hyperparameter tuning. Deployed as a Flask REST API with unit tests validating model reliability. Tech:
+using supervised Machine Learning (ExtraTrees, Naive Bayes, KNN, Neural Networks); achieved 95% accuracy through feature
+• AI Disease Prediction System (Machine Learning, Flask, REST API): Designed a symptom-based diagnostic system
+analytics. Tech: Python, React, TypeScript, Tailwind CSS, AWS (Jun ’26)
+S3; engineered an event-driven pipeline processing 3,500+ NSE stock records/day with real-time MA5, MA15, and candlestick
+analytics system using 6 AWS Lambda functions, Amazon SQS, EventBridge, API Gateway WebSockets, RDS MySQL, and
+• Real-Time Stock Market Analytics Platform (AWS, Serverless, React, TypeScript): Architected a cloud-native
+Projects
+40% and enforced code-style guidelines across a 5-member engineering team.
+◦ CI/CD Automation: Automated build, test, and deploy pipeline using GitHub Actions; cut manual release time by
+monitored conversion analytics over 2-week agile sprints and delivered 3 iterative feature releases.
+◦ Payment Integration: Integrated Razorpay payment gateway via secure REST APIs serving 500+ transactions;
+performance.
+Tailwind CSS; reduced layout shift by 30% through optimized render paths and lazy loading, improving page load
+◦ Frontend & Component Library: Built 10+ responsive pages and a reusable component library using React.js and
+Software Developer Intern                                                           May 2025 - Jul 2025
+•
+KuppiSmart Solutions                                                                Remote
++ TypeScript + Tailwind CSS dashboard on S3 with live KPI visualization and top movers tracking.
+◦ React Dashboard: Developed a WebSocket broadcasting layer with sub-second delivery latency and deployed a React
+operations/day with real-time MA5, MA15, percentage change, and candlestick trend analytics for live stock monitoring.
+◦ Event-Driven Pipeline: Engineered a fully serverless ingestion-to-dashboard pipeline generating 7,000+ database
+NSE data every minute across 9 stocks.
+using 6 Lambda functions, Amazon SQS, EventBridge, API Gateway WebSockets, RDS MySQL, and S3, processing live
+◦ Serverless Architecture: Architected and deployed a cloud-native real-time stock market analytics system on AWS
+Software Engineering Intern                                                         May 2026 - Jul 2026
+•
+Apexon (Infostretch Corporation India Pvt. Ltd.)                                    Hyderabad, India
+Experience
+• Soft Skills: Communication, Vendor Coordination, Cross-functional Collaboration, Event Management
+• Machine Learning: Scikit-learn, TensorFlow, Pandas, NumPy
+• Databases: MySQL, PostgreSQL, MongoDB
+Actions)
+• Cloud & DevOps: AWS Lambda, Amazon SQS, EventBridge, API Gateway, S3, RDS, Docker, Git, CI/CD (GitHub
+• Frameworks: React.js, Node.js, Express.js, Spring Boot, FastAPI, REST APIs, Redux
+• Languages: Java (Core), Python, C++, JavaScript, SQL
+Skills Summary
+Systems, Artificial Intelligence, Cloud Architecture
+Courses:  Data Structures & Algorithms, OOP, Design Patterns, Operating Systems, Computer Networks, Database Management
+Bachelor of Technology - Computer Science & Engineering; CGPA: 8.86/10             July 2023 - August 2027
+•
+Vellore Institute of Technology (VIT)                                                    Vellore, India
+Education
+Github:  github.com/RahulNatesan
+LinkedIn: linkedin.com/in/Rahul-Natesan                                              Mobile:  +91-7499543164
+                                          Email: rahul.natesan2023@vitstudent.ac.in
+Rahul Natesan
+----------------Page (0) Break----------------
