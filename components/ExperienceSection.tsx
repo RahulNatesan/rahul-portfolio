@@ -89,26 +89,52 @@ const certifications = [
   { name: 'MySQL', issuer: 'Self-certified', date: 'Apr 2024' },
 ];
 
-function TrajectoryLine({ revealed }: { revealed: boolean }) {
+function TrajectoryLine() {
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [pathLength, setPathLength] = useState(0);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     if (svgRef.current) {
-      const path = svgRef.current.querySelector('path');
-      if (path) setPathLength(path.getTotalLength());
+      const paths = svgRef.current.querySelectorAll('path');
+      if (paths[1]) setPathLength(paths[1].getTotalLength());
     }
   }, []);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Start drawing when container enters viewport, finish when container bottom reaches middle of viewport
+      const scrollDistance = rect.height + windowHeight / 2;
+      const scrolled = windowHeight - rect.top;
+      
+      let ratio = scrolled / scrollDistance;
+      if (ratio < 0) ratio = 0;
+      if (ratio > 1) ratio = 1;
+      
+      setProgress(ratio);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const offset = pathLength * (1 - progress);
+
   return (
-    <div className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none hidden lg:block" style={{ zIndex: 1 }}>
+    <div ref={containerRef} className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none hidden lg:block" style={{ zIndex: 1 }}>
       <svg ref={svgRef} className="w-full h-full" viewBox="0 0 48 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M24 20 C24 20, 8 100, 24 200 C40 300, 8 400, 24 580" stroke="rgba(200,150,90,0.12)" strokeWidth="1.5" strokeDasharray="4 6" fill="none" />
         <path d="M24 20 C24 20, 8 100, 24 200 C40 300, 8 400, 24 580" stroke="url(#trajectoryGrad)" strokeWidth="2" fill="none" strokeLinecap="round"
-          style={{ strokeDasharray: pathLength || 700, strokeDashoffset: revealed ? 0 : (pathLength || 700), transition: 'stroke-dashoffset 2.4s cubic-bezier(0.25,1,0.5,1)' }} />
-        <circle cx="24" cy="580" r="4" fill="var(--primary)" style={{ opacity: revealed ? 1 : 0, transition: 'opacity 0.4s ease 2.2s' }} />
-        <circle cx="24" cy="580" r="8" fill="none" stroke="var(--primary)" strokeWidth="1" style={{ opacity: revealed ? 0.4 : 0, transition: 'opacity 0.4s ease 2.2s' }} />
-        <circle cx="24" cy="20" r="3" fill="var(--primary)" opacity="0.6" />
+          style={{ strokeDasharray: pathLength || 700, strokeDashoffset: offset, transition: 'stroke-dashoffset 0.1s ease-out' }} />
+        <circle cx="24" cy="580" r="4" fill="var(--primary)" style={{ opacity: progress > 0.95 ? 1 : 0, transition: 'opacity 0.3s ease' }} />
+        <circle cx="24" cy="580" r="8" fill="none" stroke="var(--primary)" strokeWidth="1" style={{ opacity: progress > 0.95 ? 0.4 : 0, transition: 'opacity 0.3s ease' }} />
+        <circle cx="24" cy="20" r="3" fill="var(--primary)" opacity={progress > 0 ? 0.8 : 0.2} style={{ transition: 'opacity 0.3s ease' }} />
         <defs>
           <linearGradient id="trajectoryGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#C8965A" stopOpacity="0.9" />
@@ -244,7 +270,7 @@ export default function ExperienceSection() {
             <span className="text-xs font-bold text-primary">3 Roles</span>
           </div>
           <div ref={internshipRef} className="relative">
-            <TrajectoryLine revealed={internshipsRevealed} />
+            <TrajectoryLine />
             <div className="lg:pl-16 space-y-4">
               {experiences.map((exp, idx) => (
                 <InternshipCard key={exp.company} exp={exp} index={idx} revealed={internshipsRevealed} />
