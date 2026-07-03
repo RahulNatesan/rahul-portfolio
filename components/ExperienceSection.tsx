@@ -91,8 +91,10 @@ const certifications = [
 
 function TrajectoryLine() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
   const [height, setHeight] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [pathLength, setPathLength] = useState(0);
 
   const updateMeasurements = useCallback(() => {
     if (containerRef.current) {
@@ -129,17 +131,25 @@ function TrajectoryLine() {
     };
   }, [updateMeasurements]);
 
+  useEffect(() => {
+    if (pathRef.current) {
+      setPathLength(pathRef.current.getTotalLength());
+    }
+  }, [height]);
+
   const startY = 20;
   const endY = Math.max(startY, height - 20); // avoid negative length
-  const lineLength = endY - startY;
-  const offset = lineLength * (1 - progress);
+  const h = Math.max(endY, 600);
+  
+  const d = `M 24 ${startY} C 24 ${startY}, 8 ${h * 0.16}, 24 ${h * 0.33} C 40 ${h * 0.5}, 8 ${h * 0.66}, 24 ${endY}`;
+  const offset = pathLength * (1 - progress);
 
   return (
     <div ref={containerRef} className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none hidden lg:block" style={{ zIndex: 1 }}>
       <svg className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <line x1="24" y1={startY} x2="24" y2={endY} stroke="rgba(200,150,90,0.12)" strokeWidth="1.5" strokeDasharray="4 6" />
-        <line x1="24" y1={startY} x2="24" y2={endY} stroke="url(#trajectoryGrad)" strokeWidth="2" strokeLinecap="round"
-          style={{ strokeDasharray: lineLength, strokeDashoffset: isNaN(offset) ? 0 : offset, transition: 'stroke-dashoffset 0.1s ease-out' }} />
+        <path d={d} stroke="rgba(200,150,90,0.12)" strokeWidth="1.5" strokeDasharray="4 6" />
+        <path ref={pathRef} d={d} stroke="url(#trajectoryGrad)" strokeWidth="2" strokeLinecap="round"
+          style={{ strokeDasharray: pathLength, strokeDashoffset: isNaN(offset) ? 0 : offset, transition: 'stroke-dashoffset 0.1s ease-out' }} />
         
         <circle cx="24" cy={endY} r="4" fill="var(--primary)" style={{ opacity: progress > 0.95 ? 1 : 0, transition: 'opacity 0.3s ease' }} />
         <circle cx="24" cy={endY} r="8" fill="none" stroke="var(--primary)" strokeWidth="1" style={{ opacity: progress > 0.95 ? 0.4 : 0, transition: 'opacity 0.3s ease' }} />
