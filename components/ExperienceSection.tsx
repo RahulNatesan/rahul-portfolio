@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface Experience {
   role: string;
@@ -90,25 +90,16 @@ const certifications = [
 ];
 
 function TrajectoryLine() {
-  const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [pathLength, setPathLength] = useState(0);
+  const [height, setHeight] = useState(0);
   const [progress, setProgress] = useState(0);
 
-  useEffect(() => {
-    if (svgRef.current) {
-      const paths = svgRef.current.querySelectorAll('path');
-      if (paths[1]) setPathLength(paths[1].getTotalLength());
-    }
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return;
+  const updateMeasurements = useCallback(() => {
+    if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
+      setHeight(rect.height);
       
-      // Start drawing when container enters viewport, finish when container bottom reaches middle of viewport
+      const windowHeight = window.innerHeight;
       const scrollDistance = rect.height + windowHeight / 2;
       const scrolled = windowHeight - rect.top;
       
@@ -117,24 +108,43 @@ function TrajectoryLine() {
       if (ratio > 1) ratio = 1;
       
       setProgress(ratio);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    }
   }, []);
 
-  const offset = pathLength * (1 - progress);
+  useEffect(() => {
+    updateMeasurements();
+    window.addEventListener('scroll', updateMeasurements, { passive: true });
+    window.addEventListener('resize', updateMeasurements);
+    
+    let observer: ResizeObserver | null = null;
+    if (containerRef.current) {
+      observer = new ResizeObserver(() => updateMeasurements());
+      observer.observe(containerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('scroll', updateMeasurements);
+      window.removeEventListener('resize', updateMeasurements);
+      if (observer) observer.disconnect();
+    };
+  }, [updateMeasurements]);
+
+  const startY = 20;
+  const endY = Math.max(startY, height - 20); // avoid negative length
+  const lineLength = endY - startY;
+  const offset = lineLength * (1 - progress);
 
   return (
     <div ref={containerRef} className="absolute left-0 top-0 bottom-0 w-12 pointer-events-none hidden lg:block" style={{ zIndex: 1 }}>
-      <svg ref={svgRef} className="w-full h-full" viewBox="0 0 48 600" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M24 20 C24 20, 8 100, 24 200 C40 300, 8 400, 24 580" stroke="rgba(200,150,90,0.12)" strokeWidth="1.5" strokeDasharray="4 6" fill="none" />
-        <path d="M24 20 C24 20, 8 100, 24 200 C40 300, 8 400, 24 580" stroke="url(#trajectoryGrad)" strokeWidth="2" fill="none" strokeLinecap="round"
-          style={{ strokeDasharray: pathLength || 700, strokeDashoffset: offset, transition: 'stroke-dashoffset 0.1s ease-out' }} />
-        <circle cx="24" cy="580" r="4" fill="var(--primary)" style={{ opacity: progress > 0.95 ? 1 : 0, transition: 'opacity 0.3s ease' }} />
-        <circle cx="24" cy="580" r="8" fill="none" stroke="var(--primary)" strokeWidth="1" style={{ opacity: progress > 0.95 ? 0.4 : 0, transition: 'opacity 0.3s ease' }} />
-        <circle cx="24" cy="20" r="3" fill="var(--primary)" opacity={progress > 0 ? 0.8 : 0.2} style={{ transition: 'opacity 0.3s ease' }} />
+      <svg className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="24" y1={startY} x2="24" y2={endY} stroke="rgba(200,150,90,0.12)" strokeWidth="1.5" strokeDasharray="4 6" />
+        <line x1="24" y1={startY} x2="24" y2={endY} stroke="url(#trajectoryGrad)" strokeWidth="2" strokeLinecap="round"
+          style={{ strokeDasharray: lineLength, strokeDashoffset: isNaN(offset) ? 0 : offset, transition: 'stroke-dashoffset 0.1s ease-out' }} />
+        
+        <circle cx="24" cy={endY} r="4" fill="var(--primary)" style={{ opacity: progress > 0.95 ? 1 : 0, transition: 'opacity 0.3s ease' }} />
+        <circle cx="24" cy={endY} r="8" fill="none" stroke="var(--primary)" strokeWidth="1" style={{ opacity: progress > 0.95 ? 0.4 : 0, transition: 'opacity 0.3s ease' }} />
+        <circle cx="24" cy={startY} r="3" fill="var(--primary)" opacity={progress > 0 ? 0.8 : 0.2} style={{ transition: 'opacity 0.3s ease' }} />
+        
         <defs>
           <linearGradient id="trajectoryGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#C8965A" stopOpacity="0.9" />
